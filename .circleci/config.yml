@@ -1,7 +1,11 @@
 jobs:
   build:
     docker:
+<<<<<<< HEAD
       - image: python:3.6                   # similar to "image" in Git
+=======
+      - image: python:3.6                   # similar to "image" in GitLab
+>>>>>>> b1f8003f34f6498ca7c1e50193de9ec94c6d2153
     steps:
       - checkout
       - run: |                              # similar to "script" in GitLab
@@ -17,6 +21,20 @@ jobs:
           pip install -r requirements.txt
           python manage.py test taskManager
 
+<<<<<<< HEAD
+=======
+  oast:
+    machine: true
+    steps:
+      - checkout
+
+      - run: docker run -v $(pwd):/src --rm hysnsec/safety check -r /src/requirements.txt --json | tee oast-results.json || true
+
+      - store_artifacts:
+          path: oast-results.json
+          destination: safety-artifact
+
+>>>>>>> b1f8003f34f6498ca7c1e50193de9ec94c6d2153
   integration:
     docker:
       - image: python:3.6
@@ -41,7 +59,14 @@ workflows:
       - build
       - test:
           requires:
+<<<<<<< HEAD
             - build 
+=======
+            - build
+      - oast:
+          requires:
+            - test 
+>>>>>>> b1f8003f34f6498ca7c1e50193de9ec94c6d2153
       - integration:
           requires:
             - test
