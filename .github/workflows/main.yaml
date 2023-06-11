@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-name: Django                                  # workflow name
+#name: Django                                  # workflow name
 =======
 name: Django                                  # workflow name Cameron
 >>>>>>> 6736b8974dcfb3c004b7316cb3824ff95f986f91
