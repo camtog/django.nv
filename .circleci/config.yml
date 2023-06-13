@@ -17,6 +17,17 @@ jobs:
           pip install -r requirements.txt
           python manage.py test taskManager
 
+  secret_scanning:
+    machine: true
+    steps:
+      - checkout
+
+      - run: docker run --rm -v $(pwd):/src hysnsec/trufflehog file:///src --json > trufflehog-output.json
+
+      - store_artifacts:
+          path: trufflehog-output.json
+          destination: trufflehog-artifact
+
   integration:
     docker:
       - image: python:3.6
@@ -42,10 +53,13 @@ workflows:
       - test:
           requires:
             - build
-      - integration:
+      - secret_scanning:
           requires:
             - test
+      - integration:
+          requires:
+            - secret_scanning
       - prod:
           type: approval
           requires:
-            - integration   
+            - integration
