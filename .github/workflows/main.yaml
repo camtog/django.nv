@@ -1,4 +1,4 @@
-name: Django                                  # workflow namer
+name: Django                                  # workflow name
 
 on:
   push:
@@ -54,8 +54,8 @@ jobs:
       - run: npm install
 
       - run: docker run --rm -v $(pwd):/src -w /src hysnsec/retire --outputformat json --outputpath retirejs-report.json --severity high
-	continue-on-error: true
-
+        continue-on-error: true             # allow the build to fail, similar to allow_failure: true
+        
       - uses: actions/upload-artifact@v2
         with:
           name: RetireJS
