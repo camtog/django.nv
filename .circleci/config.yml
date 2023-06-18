@@ -17,15 +17,17 @@ jobs:
           pip install -r requirements.txt
           python manage.py test taskManager
 
-  integration:
-    docker:
-      - image: python:3.6
+    nuclei:
+    machine: true
     steps:
       - checkout
-      - run:
-          command: |
-            echo "This is an integration step"
-            exit 1
+
+      - run: |
+          docker run --user $(id -u):$(id -g) -w /nuclei -v $(pwd):/nuclei:rw --rm projectdiscovery/nuclei:v2.9.6 -u https://prod-zn7o4u20.lab.practical-devsecops.training -j -o nuclei-output.json
+
+      - store_artifacts:
+          path: nuclei-output.json
+          destination: nuclei-artifact
 
   prod:
     docker:
@@ -42,10 +44,10 @@ workflows:
       - test:
           requires:
             - build 
-      - integration:
+      - nuclei:
           requires:
             - test
       - prod:
           type: approval
           requires:
-            - integration
+            - nuclei
