@@ -45,7 +45,7 @@ workflows:
       - test:
           requires:
             - build 
-      - integration:
+      - zap-baseline:
           requires:
             - test
       - prod:
